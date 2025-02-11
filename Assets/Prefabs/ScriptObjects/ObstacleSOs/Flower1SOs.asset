@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b952e06c75a93c14a9eacf67949f3025, type: 3}
+  m_Name: Flower1SOs
+  m_EditorClassIdentifier: 
+  ObstaclePrefab: {fileID: 691373498089805264, guid: ab703a071507d0d4ba5103e83d329ca4, type: 3}

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be23caacc0b597046b5b95a755609288, type: 3}
+  m_Name: Power Fire
+  m_EditorClassIdentifier: 
+  skillID: 2
+  skillName: "\u70C8\u7130\u4E4B\u529B"
+  skillSprite: {fileID: 21300000, guid: 2a1ea1b843acae84ea5bc0fa886cc742, type: 3}
+  description: "\u4E0D\u7A33\u5B9A\uFF0C\u4F46\u5F3A\u5927"
+  isUnlocked: 0
+  powerFire: {fileID: 7766685762543634755, guid: 3026885469821514694826d29040dade, type: 3}
