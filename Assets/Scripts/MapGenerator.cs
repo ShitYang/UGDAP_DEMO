@@ -1,11 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class MapGenerator : MonoBehaviour {
 
     public EventHandler OnGenerateMap;
+
+    [SerializeField] private float monsterPossibility = 0.7f;
+    [SerializeField] private float obstaclePossibility;
+    
+    [SerializeField] private List<GameObject> bosses;
+    [SerializeField] private List<GameObject> monsters;
     
     [SerializeField] private List<RoomSO> RoomSos;
     [SerializeField] private int bossCount = 3;
@@ -17,7 +26,8 @@ public class MapGenerator : MonoBehaviour {
     private const int ManhattanDistance = 12;
 
     private Dictionary<int, RoomSO> RoomType2Room = new Dictionary<int, RoomSO>();
-    
+    private Dictionary<int, Room> Id2Room = new Dictionary<int, Room>();
+
     private int[,] mapMatrix = new int[RowCount, ColumnCount];
     private int startRoomIndex, endRoomIndex;
     private List<int> bossRooms = new List<int>();
@@ -49,7 +59,7 @@ public class MapGenerator : MonoBehaviour {
         
     }
 
-    public void GenerateMap() {
+    private void GenerateMap() {
         // 生成起始点
         do {
             startRoomIndex = Random.Range(0, RowCount * ColumnCount);
@@ -64,7 +74,8 @@ public class MapGenerator : MonoBehaviour {
         // 生成房间
         GenerateRoomType();
         // 生成障碍物
-        // GenerateObstacle();
+        GenerateObstacle();
+
         OnGenerateMap?.Invoke(this, EventArgs.Empty);
     }
 
@@ -121,14 +132,15 @@ public class MapGenerator : MonoBehaviour {
 
     private void GenerateRoomType() {
         for (int i = 0; i < RowCount; ++i) {
-            String mess = "";
             for (int j = 0; j < ColumnCount; ++j) {
-                mess = mess + connectionMatrix[i, j] + " ";
                 Room room = Instantiate(RoomType2Room[connectionMatrix[i, j]].RoomPrefab, 
                     new Vector2(j * RoomWidth, -i * RoomHeight), Quaternion.identity).GetComponent<Room>();
                 rooms.Add(room);
+                int roomIndex = GetRoomIndexByXY(i, j);
 
-                int roomIndex = GetRoomIndexByXY(i, j); 
+                room.Id = roomIndex;
+                Id2Room[roomIndex] = room;
+                
                 if (roomIndex == startRoomIndex) {
                     startRoom = room;
                 } else if (roomIndex == endRoomIndex) {
@@ -137,12 +149,35 @@ public class MapGenerator : MonoBehaviour {
                 
             }
 
-            Debug.Log(mess);
         }
     }
     
     private void GenerateObstacle() {
-        // throw new NotImplementedException();
+
+        for (int i = 0, j = 0; i < bossRooms.Count && j < bosses.Count; ++i, ++j) {
+            Room room = Id2Room[bossRooms[i]];
+            BaseBoss boss = Instantiate(bosses[j], room.transform.position, quaternion.identity).GetComponent<BaseBoss>();
+            room.boss = boss;
+            if (j == bosses.Count - 1) {
+                boss.OnBossDead += OnBossDead;
+            }
+        }
+        
+        foreach (var room in rooms) {
+            if (room != startRoom && !bossRooms.Contains(room.Id)) {
+                if (1f - Random.Range(0f, 1f) > monsterPossibility) {
+                    int typeIndex = Random.Range(0, monsters.Count);
+                    BaseMonster monster = Instantiate(monsters[typeIndex], room.transform.position, quaternion.identity).GetComponent<BaseMonster>();
+                    room.monsters.Add(monster);
+                }
+            }
+            // TODO Generate Obstacle
+        }
+        
+    }
+
+    private void OnBossDead(object sender, EventArgs e) {
+        SceneManager.LoadScene("EndChooseScene");
     }
 
     // 工具方法
