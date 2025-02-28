@@ -53,7 +53,7 @@ MonoBehaviour:
   attackComponentGameObject: {fileID: 9052057163325286318}
   healthComponentGameObject: {fileID: 3726228795285571115}
   fireDeltaTime: 1
-  moveSpeed: 5
+  moveSpeed: 20
   attackVal: 4
 --- !u!50 &6781023995599616008
 Rigidbody2D:

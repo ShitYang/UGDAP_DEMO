@@ -25,8 +25,12 @@ public class UPlayerController : MonoBehaviour {
     private AbstractAttackComponent attackComponent;
     private HealthComponent healthComponent;
     
+    private Rigidbody2D body;
+    
     // Start is called before the first frame update
     private void Start() {
+        body = GetComponent<Rigidbody2D>();
+        
         attackComponent = attackComponentGameObject.GetComponent<AbstractAttackComponent>();
         healthComponent = healthComponentGameObject.GetComponent<HealthComponent>();
         
@@ -55,7 +59,7 @@ public class UPlayerController : MonoBehaviour {
         Vector2 movement = new (moveX, moveY);
 
         // 移动对象
-        transform.Translate(moveSpeed * Time.deltaTime * movement);
+        body.MovePosition((Vector2)transform.position + moveSpeed * Time.deltaTime * movement);
         camera.transform.position = new Vector3(transform.position.x, transform.position.y, camera.transform.position.z);
         
         if (Input.GetKey(KeyCode.Mouse0)) {
